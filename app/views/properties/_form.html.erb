@@ -1,0 +1,84 @@
+<%= form_for @property do |form| %>
+  <% if property.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(property.errors.count, "error") %> prohibited this property from being saved:</h2>
+
+      <ul>
+      <% property.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :property_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address, id: :property_address %>
+  </div>
+
+  <a href="#" id="add_btn">Add neighbour</a>
+
+  <%= form.fields_for :neighbours do |n| %>
+    <div class="neighbour">
+      <div class="field">
+        <%= n.label :name %>
+        <%= n.text_field :name %>
+      </div>
+
+      <div class="field">
+        <%= n.label :email %>
+        <%= n.text_field :email %>
+      </div>
+      <div>
+        <%= n.check_box :_destroy%>
+      </div>
+      <a href="#" class="remove_btn">Remove</a>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  var n=0;
+  $("#add_btn").click(function(e){
+    e.preventDefault();
+    console.log("CLICK ADD BTN")
+    a=$(".neighbour:last").clone();
+    a.find("input").each(function(){
+      console.log($(this));
+    
+      if ($(this).attr('id') != undefined){
+        id = $(this).attr('id').replace(n, n+1);
+        $(this).attr('id', id);
+      }
+      if ($(this).attr('name') != undefined){
+        name = $(this).attr('name').replace(n, n+1);
+        $(this).attr('name', name);
+      }
+    })
+
+    $(a).insertAfter($(".neighbour:last"))
+    n=n+1;
+  })
+
+  $(".remove_btn").click(function(e){
+    e.preventDefault();
+    $(this).parent().remove();
+  })
+</script>
+
+<style type="text/css">
+  
+  .neighbour{
+    margin: 5px;
+    border: 1px solid;
+  }
+</style>
